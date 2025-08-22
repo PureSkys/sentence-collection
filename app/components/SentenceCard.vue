@@ -39,7 +39,7 @@ const copy = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.add({
       title: '复制成功',
-      description: '句子已复制到剪贴板',
+      description: text,
       color: 'success'
     })
   } catch (err) {

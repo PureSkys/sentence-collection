@@ -15,5 +15,14 @@ export default defineNuxtConfig({
         plugins: [
             tailwindcss(),
         ],
+    },
+    app: {
+        baseURL: '/sentences/',
+        head: {
+            title: '句子集',
+            meta: [
+                {name: 'description', content: '句子集'}
+            ],
+        }
     }
 })
