@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+  <div :class="app_config.dark_mode ? 'dark' : ''"
+       class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
     <header>
       <AppHeader></AppHeader>
     </header>
@@ -13,7 +14,7 @@
       </div>
       <!--      中间部分卡片-->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 mb-8 border border-gray-100 dark:border-gray-700">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="md:col-span-3">
             <SentenceType></SentenceType>
           </div>
@@ -44,4 +45,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import {useAppConfigStore} from "~/store/AppConfig";
+
+const app_config = useAppConfigStore();
 </script>
