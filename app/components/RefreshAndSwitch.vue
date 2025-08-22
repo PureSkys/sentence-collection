@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-wrap items-center justify-between gap-4">
     <button
+        @click="refreshSentences"
         class="cursor-pointer px-6 py-2.5 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed flex items-center"
         tabindex="0">
       <svg t="1755834920315" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +37,17 @@
 </template>
 
 <script setup lang="ts">
-import {useAppConfigStore} from "~/store/AppConfig";
+import {useAppConfigStore} from "~/store/AppConfigStore";
+import {getSentences} from "~/utils/Api";
 
 const app_config = useAppConfigStore();
+// 刷新句子
+const refreshSentences = () => {
+  getSentences(app_config.sentence_type, app_config.sentences_count)
+      .then(res => {
+        app_config.sentences = res as []
+      });
+}
 </script>
 
 <style scoped>

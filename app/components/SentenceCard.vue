@@ -1,34 +1,55 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1"
-        style="opacity: 1; transform: none;">
-      <div class="p-5">
-        <div class="flex justify-between items-start mb-3"><span
-            class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">原创</span>
-          <div class="flex space-x-2">
-            <button
-                class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
-                aria-label="分享句子"><i class="fa-solid fa-share-alt text-gray-500 dark:text-gray-400">
-              <svg t="1755836357844" class="icon" viewBox="0 0 1056 1024" version="1.1"
-                   xmlns="http://www.w3.org/2000/svg" p-id="14032" width="16" height="16">
-                <path
-                    d="M783.17881813 677.86924437a156.45447562 156.45447562 0 0 0-110.44674 45.45597094L465.83227531 603.862415a200.37255094 200.37255094 0 0 0-8.21776406-183.04480969l212.5818-122.74990594a156.45447562 156.45447562 0 1 0-32.02579781-48.55524187L421.22155906 374.7042125a199.40989875 199.40989875 0 0 0-137.35404468-54.65986594C173.27989812 320.04434656 83.58888031 409.73536438 83.58888031 520.27602125a200.23167469 200.23167469 0 0 0 350.59326563 132.2355525l205.44408562 118.57058625a157.08841688 157.08841688 0 1 0 143.50562813-93.259875z m-1e-8 1e-8"
-                    p-id="14033" fill="#707070"></path>
-              </svg>
-            </i>
-            </button>
-          </div>
+  <div v-for="item in app_config.sentences" :key="item.uuid"
+       class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1"
+       style="opacity: 1; transform: none;">
+    <div class="p-5">
+      <div class="flex justify-between items-start mb-3"><span
+          class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
+          {{ item.category }}
+        </span>
+        <div class="flex space-x-2">
+          <button
+              @click="copy(item.sentence)"
+              class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
+          >
+            <svg t="1755868018039" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                 xmlns="http://www.w3.org/2000/svg" p-id="13692" width="18" height="18">
+              <path
+                  d="M789.330818 643.218554c-47.517223 0-90.109274 20.977777-119.110795 54.141084L386.844024 540.252461c3.855818-13.588483 5.972015-27.906583 6.022157-42.717917l282.563494-165.220972c28.77844 29.861098 69.155033 48.466851 113.902166 48.466851 87.379093 0 158.213371-70.835302 158.213371-158.213371 0-87.377046-70.835302-158.212348-158.213371-158.212348-87.37807 0-158.212348 70.836325-158.212348 158.212348 0 1.689479 0.073678 3.359514 0.12689 5.034666l-279.240819 163.278737c-28.950356-31.990598-70.794369-52.094472-117.338429-52.094472-87.37807 0-158.212348 70.834278-158.212348 158.213371 0 87.377046 70.835302 158.213371 158.212348 158.213371 30.777981 0 59.483766-8.81783 83.784218-24.02416l312.746934 173.392072c1.683339 85.919858 71.811536 155.064658 158.133553 155.064658 87.379093 0 158.213371-70.836325 158.213371-158.212348C947.545212 714.051809 876.709911 643.218554 789.330818 643.218554z"
+                  p-id="13693" fill="#707070"></path>
+            </svg>
+          </button>
         </div>
-        <blockquote class="text-gray-800 dark:text-gray-200 mb-4 italic">"乐得浮生半日闲，一杯酒前细烟点。"
-        </blockquote>
       </div>
+      <blockquote class="text-gray-800 dark:text-gray-200 mb-4 italic">
+        {{ item.sentence }}
+      </blockquote>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {useAppConfigStore} from "~/store/AppConfigStore";
 
+const app_config = useAppConfigStore()  // 获取应用配置仓库
+const toast = useToast()
+// 复制文本
+const copy = (text: string) => {
+  try {
+    navigator.clipboard.writeText(text);
+    toast.add({
+      title: '复制成功',
+      description: '句子已复制到剪贴板',
+      color: 'success'
+    })
+  } catch (err) {
+    toast.add({
+      title: '复制失败',
+      description: '请手动复制',
+      color: 'error'
+    })
+  }
+}
 </script>
 
 <style scoped>

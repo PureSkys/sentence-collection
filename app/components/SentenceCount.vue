@@ -13,7 +13,8 @@
       </button>
       <input type="text"
              class=" flex-6 w-full text-center border-gray-200 py-2 border-x focus:outline-none focus:ring-1 focus:ring-amber-50 dark:bg-gray-900 dark:text-white"
-             :value="count">
+             :value="app_config.sentences_count"
+             disabled>
       <button
           @click="changeCount(1)"
           type="button"
@@ -25,17 +26,23 @@
 </template>
 
 <script setup lang="ts">
-const count = ref(5)  // 句子数量
+import {useAppConfigStore} from "~/store/AppConfigStore";
+
+const app_config = useAppConfigStore()  // 获取应用配置仓库
 
 // 改变句子数量
 const changeCount = (val: number) => {
-  count.value += val
-  if (count.value < 1) {
-    count.value = 1
+  app_config.sentences_count += val
+  if (app_config.sentences_count < 1) {
+    app_config.sentences_count = 1
   }
-  if (count.value > 15) {
-    count.value = 15
+  if (app_config.sentences_count > 15) {
+    app_config.sentences_count = 15
   }
+  getSentences(app_config.sentence_type, app_config.sentences_count)
+      .then(res => {
+        app_config.sentences = res as []
+      });
 }
 </script>
 
