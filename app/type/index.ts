@@ -5,6 +5,7 @@ export type sentence = {
     from_source?: string,
     from_who?: string,
     length: number,
+    likes: string,
     createdAt: string,
     updatedAt: string,
 }

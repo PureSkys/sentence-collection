@@ -57,12 +57,15 @@ import {getSentences} from "~/utils/Api";
 import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore();
-onBeforeMount(() => {
-  if (app_config.sentences.length < 1) {
+onMounted(() => {
+  console.log('app_config', app_config.sentences.length)
+  if (app_config.sentences.length <= 0) {
     getSentences(app_config.sentence_type, app_config.sentences_count)
         .then(res => {
           app_config.sentences = res as [sentence]
         });
+    console.log('执行了')
   }
+  app_config.isRefreshing = false;
 })
 </script>

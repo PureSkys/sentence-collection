@@ -27,6 +27,7 @@
 
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
+import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
 
@@ -41,7 +42,7 @@ const changeCount = (val: number) => {
   }
   getSentences(app_config.sentence_type, app_config.sentences_count)
       .then(res => {
-        app_config.sentences = res as []
+        app_config.sentences = res as [sentence]
       });
 }
 </script>

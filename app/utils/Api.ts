@@ -10,6 +10,25 @@ export const getSentences = async (type: string, count: number) => {
             }
         }
     )
+}
 
+// 点赞句子
+export const likeSentence = async (uuid: string) => {
+    return await $fetch(baseUrl + '/like', {
+        method: 'POST',
+        body: {
+            uuid: uuid,
+        }
+    })
+}
+
+// 取消点赞句子
+export const unlikeSentence = async (uuid: string) => {
+    return await $fetch(baseUrl + '/unlike', {
+        method: 'POST',
+        body: {
+            uuid: uuid,
+        }
+    })
 }
 

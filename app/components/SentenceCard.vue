@@ -14,7 +14,24 @@
           class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
           {{ item.category }}
         </span>
-        <div class="flex space-x-2">
+        <div class="flex">
+          <button
+              :title="item.likes?item.likes:'0'"
+              @click="touchLike(item,item.uuid)"
+              class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70">
+            <svg t="1755952044704" v-if="!checkIdExists(item.uuid)" class="icon" viewBox="0 0 1166 1024" version="1.1"
+                 xmlns="http://www.w3.org/2000/svg" p-id="10160" width="18" height="18">
+              <path
+                  d="M882.058985 2.769416C863.503898 0.969296 845.641165 0 829.024669 0c-115.623117 0-184.166162 42.510535-246.201079 107.868752C512.341954 33.094521 431.751949-11.631547 283.588195 2.769416 158.964476 14.954846 17.170379 124.623718 0 336.345569v69.235399C13.84708 589.470188 142.486451 739.434063 507.495476 999.897634a129.331726 129.331726 0 0 0 150.379287 0c365.285966-261.017455 493.371454-410.981329 507.633946-594.870549v-69.235399C1148.476801 124.623718 1006.682703 14.954846 882.058985 2.769416z m189.843464 339.253456v57.465381C1059.301607 550.006011 941.601428 682.245623 603.59421 923.046341a35.725466 35.725466 0 0 1-41.54124 0C224.738106 682.384094 106.345573 550.006011 93.74473 399.488253V342.022872c13.84708-156.887414 112.438288-237.477419 198.982538-245.924138 15.370259-1.523179 30.186634-2.215533 43.895243-2.215533 96.929559 0 143.455747 35.448524 210.337142 115.069234l35.863937 42.787476 36.002408-42.787476c66.742925-79.620709 112.992171-115.069233 210.198671-115.069234 13.84708 0 28.524984 0 43.895243 2.215533 86.544249 8.446719 185.55087 89.036723 198.982537 245.924138z"
+                  fill="#707070" p-id="10161"></path>
+            </svg>
+            <svg t="1755952193520" v-else class="icon" viewBox="0 0 1166 1024" version="1.1"
+                 xmlns="http://www.w3.org/2000/svg" p-id="11761" width="18" height="18">
+              <path
+                  d="M882.058985 2.769416C863.503898 0.969296 845.641165 0 829.024669 0c-115.623117 0-184.166162 42.510535-246.201079 107.868752C512.341954 33.094521 431.751949-11.631547 283.588195 2.769416 158.964476 14.954846 17.170379 124.623718 0 336.345569v69.235399C13.84708 589.470188 142.486451 739.434063 507.495476 999.897634a129.331726 129.331726 0 0 0 150.379287 0c365.285966-261.017455 493.371454-410.981329 507.633946-594.870549v-69.235399C1148.476801 124.623718 1006.682703 14.954846 882.058985 2.769416z"
+                  fill="#d81e06" p-id="11762"></path>
+            </svg>
+          </button>
           <button
               class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
               @click="copy(item.sentence)"
@@ -37,6 +54,8 @@
 
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
+import {likeSentence, unlikeSentence} from "~/utils/Api";
+import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
 const toast = useToast()
@@ -54,6 +73,34 @@ const copy = (text: string) => {
       title: '复制失败',
       description: '请手动复制',
       color: 'error'
+    })
+  }
+}
+// 检测句子是否点赞
+const checkIdExists = (uuid: string) => {
+  return app_config.like_sentences_uuid.some(item => item === uuid)
+}
+// 点赞句子或取消点赞
+const touchLike = async (item: sentence, uuid: string) => {
+  if (checkIdExists(uuid)) {
+    // 取消点赞
+    await unlikeSentence(uuid)
+    // 刷新点赞列表
+    app_config.like_sentences_uuid = app_config.like_sentences_uuid.filter(item => item !== uuid)
+    item.likes = String(Number(item.likes) - 1)
+    toast.add({
+      title: '取消点赞',
+      color: 'info'
+    })
+  } else {
+    // 点赞句子
+    await likeSentence(uuid)
+    // 刷新点赞列表
+    app_config.like_sentences_uuid.push(uuid)
+    item.likes = String(Number(item.likes) + 1)
+    toast.add({
+      title: '点赞成功',
+      color: 'success'
     })
   }
 }
