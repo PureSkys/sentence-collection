@@ -54,12 +54,13 @@
 <script setup lang="ts">
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences} from "~/utils/Api";
+import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore();
 onMounted(() => {
   getSentences(app_config.sentence_type, app_config.sentences_count)
       .then(res => {
-        app_config.sentences = res as []
+        app_config.sentences = res as [sentence]
       });
 })
 </script>

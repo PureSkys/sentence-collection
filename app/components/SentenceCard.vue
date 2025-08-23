@@ -1,7 +1,6 @@
 <template>
   <div v-for="item in app_config.sentences" :key="item.uuid"
-       class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1"
-       style="opacity: 1; transform: none;">
+       class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1">
     <div class="p-5">
       <div class="flex justify-between items-start mb-3"><span
           class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
