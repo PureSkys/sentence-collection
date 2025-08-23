@@ -4,19 +4,19 @@
     <div class="flex md:flex items-center space-x-2 overflow-x-auto pb-2">
       <button
           v-for="(type, key) in SENTENCE_TYPES"
-          @click="changeType(key)"
           :key="key"
-          class="cursor-pointer px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-300"
           :class="key === app_config.sentence_type
                 ? 'bg-indigo-600 text-white font-medium shadow-md'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'">
+                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+          class="cursor-pointer px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-300"
+          @click="changeType(key)">
         {{ type }}
       </button>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // 一句话参数类型
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences} from "~/utils/Api";
