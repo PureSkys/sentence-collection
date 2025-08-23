@@ -58,9 +58,11 @@ import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore();
 onBeforeMount(() => {
-  getSentences(app_config.sentence_type, app_config.sentences_count)
-      .then(res => {
-        app_config.sentences = res as [sentence]
-      });
+  if (app_config.sentences.length < 1) {
+    getSentences(app_config.sentence_type, app_config.sentences_count)
+        .then(res => {
+          app_config.sentences = res as [sentence]
+        });
+  }
 })
 </script>

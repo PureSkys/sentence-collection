@@ -2,11 +2,11 @@
   <div v-for="item in app_config.sentences" :key="item.uuid"
        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1">
     <div v-if="app_config.isRefreshing" class="p-9 flex items-center gap-4">
-      <USkeleton class="h-12 w-12 rounded-full"/>
+      <USkeleton class="h-12 w-12 rounded-full dark:bg-gray-700"/>
       <div class="grid gap-2">
-        <USkeleton class="h-4 w-[250px]"/>
-        <USkeleton class="h-4 w-[250px]"/>
-        <USkeleton class="h-4 w-[200px]"/>
+        <USkeleton class="h-4 w-[250px] dark:bg-gray-700"/>
+        <USkeleton class="h-4 w-[250px] dark:bg-gray-700"/>
+        <USkeleton class="h-4 w-[200px] dark:bg-gray-700"/>
       </div>
     </div>
     <div v-else class="p-5">
