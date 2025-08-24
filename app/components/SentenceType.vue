@@ -40,11 +40,19 @@ const app_config = useAppConfigStore()  // 获取应用配置仓库
 
 // 改变类型
 const changeType = (key: string) => {
+  if (app_config.sentence_type === key) {
+    app_config.isRefreshing = false
+    return
+  }
+  app_config.isRefreshing = true
   app_config.sentence_type = key;
   getSentences(app_config.sentence_type, app_config.sentences_count)
       .then(res => {
         app_config.sentences = res as []
-      });
+        app_config.isRefreshing = false
+      }).catch(() => {
+    app_config.isRefreshing = false
+  })
 }
 </script>
 

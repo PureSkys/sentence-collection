@@ -22,8 +22,13 @@ export default defineNuxtConfig({
         head: {
             title: '句子集',
             meta: [
-                {name: 'description', content: '句子集'}
+                {name: 'description', content: '句子集'},
+                {name: 'keywords', content: '句子集, 句子, 句子收集, 句子收藏'},
             ],
+            link: [
+                // 配置站点图标
+                {rel: 'icon', type: 'image/x-icon', href: '/sentences/favicon.png'}
+            ]
         }
     }
 })

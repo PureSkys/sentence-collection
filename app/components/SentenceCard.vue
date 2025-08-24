@@ -59,6 +59,7 @@ import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
 const toast = useToast()
+
 // 复制文本
 const copy = (text: string) => {
   try {

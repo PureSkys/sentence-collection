@@ -33,17 +33,25 @@ const app_config = useAppConfigStore()  // 获取应用配置仓库
 
 // 改变句子数量
 const changeCount = (val: number) => {
+  app_config.isRefreshing = true
   app_config.sentences_count += val
   if (app_config.sentences_count < 1) {
     app_config.sentences_count = 1
+    app_config.isRefreshing = false
+    return;
   }
   if (app_config.sentences_count > 15) {
     app_config.sentences_count = 15
+    app_config.isRefreshing = false
+    return
   }
   getSentences(app_config.sentence_type, app_config.sentences_count)
       .then(res => {
         app_config.sentences = res as [sentence]
-      });
+        app_config.isRefreshing = false
+      }).catch(() => {
+    app_config.isRefreshing = false
+  })
 }
 </script>
 
