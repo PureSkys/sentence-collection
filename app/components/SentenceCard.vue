@@ -1,6 +1,7 @@
 <template>
   <div v-for="item in app_config.sentences" :key="item.uuid"
        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1">
+    <!--    骨架屏-->
     <div v-if="app_config.isRefreshing" class="p-9 flex items-center gap-4">
       <USkeleton class="h-12 w-12 rounded-full dark:bg-gray-700"/>
       <div class="grid gap-2">
@@ -9,9 +10,12 @@
         <USkeleton class="h-4 w-[200px] dark:bg-gray-700"/>
       </div>
     </div>
-    <div v-else class="p-5">
-      <div class="flex justify-between items-start mb-3"><span
-          class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
+    <!--    句子卡片-->
+    <div v-else class="px-5 py-3.5">
+      <div class="flex justify-between items-center mb-3">
+        <!--        分类-->
+        <span
+            class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
           {{ item.category }}
         </span>
         <div class="flex">
@@ -35,6 +39,7 @@
             <span class="text-gray-500"
                   :class="checkIdExists(item.uuid)?'text-red-600':''">{{ item.likes ? item.likes : 0 }}</span>
           </button>
+          <!--        分享按钮-->
           <button
               class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
               @click="copy(item.sentence)"
@@ -48,8 +53,12 @@
           </button>
         </div>
       </div>
-      <blockquote class="text-gray-800 dark:text-gray-200 mb-4 italic">
-        {{ item.sentence }}
+      <!--      句子内容-->
+      <blockquote class="flex flex-col   text-gray-800 dark:text-gray-200 mb-4 italic">
+        <span>{{ item.sentence }}</span>
+        <div class="flex mt-3 justify-end">
+          <span class="truncate">—— {{ item.from_who }} 《{{ item.from_source }}》</span>
+        </div>
       </blockquote>
     </div>
   </div>
