@@ -1,5 +1,6 @@
 master:
   push:
+    - imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
     - stages:
         - name: sync to github
           image: tencentcom/git-sync
