@@ -2,20 +2,22 @@ master:
   push:
     - docker:
         image: node:22
+
+    - name: Sync to Github
       stages:
-        #          同步代码到github
-        - name: sync to github
-          imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
-          image: tencentcom/git-sync
-          settings:
-            target_url: https://github.com/PureSkys/sentence-collection.git
-            auth_type: https
-            username: ${GIT_USERNAME}
-            password: ${GIT_ACCESS_TOKEN}
-        #        构建并推送文件到Halo静态项目服务目录
+        imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
+        image: tencentcom/git-sync
+        settings:
+          target_url: https://github.com/PureSkys/sentence-collection.git
+          auth_type: https
+          username: ${GIT_USERNAME}
+          password: ${GIT_ACCESS_TOKEN}
+
+    - name: Build and Sync to Halo StaticServices
+      stages:
         - name: Install pnpm
           script:
-            - npm install pnpm
+            - sudo npm install -g pnpm
         - name: Install dependencies
           script:
             - pnpm install
