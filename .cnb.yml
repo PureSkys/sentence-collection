@@ -13,6 +13,9 @@ master:
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
         #        构建并推送文件到Halo静态项目服务目录
+        - name: Install pnpm
+          script:
+            - npm install pnpm
         - name: Install dependencies
           script:
             - pnpm install
