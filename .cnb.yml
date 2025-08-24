@@ -1,8 +1,5 @@
 master:
   push:
-    - docker:
-        image: node:22
-
     - name: Sync to Github
       stages:
         imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
@@ -14,6 +11,8 @@ master:
           password: ${GIT_ACCESS_TOKEN}
 
     - name: Build and Sync to Halo StaticServices
+      docker:
+        image: node:22
       stages:
         - name: Install pnpm
           script:
