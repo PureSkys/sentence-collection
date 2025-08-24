@@ -1,8 +1,8 @@
 master:
   push:
-    - imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
     - stages:
         - name: sync to github
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
           image: tencentcom/git-sync
           settings:
             target_url: https://github.com/PureSkys/sentence-collection.git
