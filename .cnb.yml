@@ -1,6 +1,9 @@
 master:
   push:
-    - stages:
+    - docker:
+        image: node:22
+      stages:
+        #          同步代码到github
         - name: sync to github
           imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
           image: tencentcom/git-sync
@@ -9,3 +12,13 @@ master:
             auth_type: https
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
+        #        构建并推送文件到Halo静态项目服务目录
+        - name: Push-Deploy To Halo Static-Pages Start
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/puresky.yml
+          stages:
+            - name: Install dependencies
+              script: pnpm install
+            - name: Build
+              script: pnpm run dev
+            - name: Deploy to Halo
+              script: npx halo-static-pages-deploy-cli deploy -e $ENDPOINT -i $SENTENCE_COLLECTION_ID -t $PAT -f ./.output/public
