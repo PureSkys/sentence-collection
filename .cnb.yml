@@ -17,7 +17,7 @@ master:
       stages:
         - name: Install pnpm
           script:
-            - sudo npm install -g pnpm
+            - npm install -g pnpm
         - name: Install dependencies
           script:
             - pnpm install
