@@ -15,10 +15,11 @@
           {{ item.category }}
         </span>
         <div class="flex">
+          <!--          点赞按钮-->
           <button
               :title="item.likes?item.likes:'0'"
               @click="touchLike(item,item.uuid)"
-              class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70">
+              class="flex items-center gap-1 cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70">
             <svg t="1755952044704" v-if="!checkIdExists(item.uuid)" class="icon" viewBox="0 0 1166 1024" version="1.1"
                  xmlns="http://www.w3.org/2000/svg" p-id="10160" width="18" height="18">
               <path
@@ -31,6 +32,8 @@
                   d="M882.058985 2.769416C863.503898 0.969296 845.641165 0 829.024669 0c-115.623117 0-184.166162 42.510535-246.201079 107.868752C512.341954 33.094521 431.751949-11.631547 283.588195 2.769416 158.964476 14.954846 17.170379 124.623718 0 336.345569v69.235399C13.84708 589.470188 142.486451 739.434063 507.495476 999.897634a129.331726 129.331726 0 0 0 150.379287 0c365.285966-261.017455 493.371454-410.981329 507.633946-594.870549v-69.235399C1148.476801 124.623718 1006.682703 14.954846 882.058985 2.769416z"
                   fill="#d81e06" p-id="11762"></path>
             </svg>
+            <span class="text-gray-500"
+                  :class="checkIdExists(item.uuid)?'text-red-600':''">{{ item.likes ? item.likes : 0 }}</span>
           </button>
           <button
               class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
