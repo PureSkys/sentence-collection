@@ -13,12 +13,13 @@ master:
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
         #        构建并推送文件到Halo静态项目服务目录
-        - name: Push-Deploy To Halo Static-Pages Start
+        - name: Install dependencies
+          script:
+            - pnpm install
+        - name: Build
+          script:
+            - pnpm run generate
+        - name: Deploy to Halo
           imports: https://cnb.cool/puresky/secret-store/-/blob/main/puresky.yml
-          stages:
-            - name: Install dependencies
-              script: pnpm install
-            - name: Build
-              script: pnpm run dev
-            - name: Deploy to Halo
-              script: npx halo-static-pages-deploy-cli deploy -e $ENDPOINT -i $SENTENCE_COLLECTION_ID -t $PAT -f ./.output/public
+          script:
+            - npx halo-static-pages-deploy-cli deploy -e $ENDPOINT -i $SENTENCE_COLLECTION_ID -t $PAT -f ./.output/public
