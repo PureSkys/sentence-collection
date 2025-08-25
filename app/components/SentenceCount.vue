@@ -34,6 +34,7 @@ const app_config = useAppConfigStore()  // 获取应用配置仓库
 // 改变句子数量
 const changeCount = (val: number) => {
   app_config.isRefreshing = true
+  app_config.isLikeMode = false;
   app_config.sentences_count += val
   if (app_config.sentences_count < 1) {
     app_config.sentences_count = 1
