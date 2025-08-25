@@ -70,6 +70,7 @@ import {likeSentence, unlikeSentence} from "~/utils/Api";
 import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
+const timer = ref()  // 定时器id
 const toast = useToast()
 
 // 复制文本
@@ -95,27 +96,30 @@ const checkIdExists = (uuid: string) => {
 }
 // 点赞句子或取消点赞
 const touchLike = async (item: sentence, uuid: string) => {
-  if (checkIdExists(uuid)) {
-    // 取消点赞
-    await unlikeSentence(uuid)
-    // 刷新点赞列表
-    app_config.like_sentences_uuid = app_config.like_sentences_uuid.filter(item => item !== uuid)
-    item.likes = String(Number(item.likes) - 1)
-    toast.add({
-      title: '取消点赞',
-      color: 'info'
-    })
-  } else {
-    // 点赞句子
-    await likeSentence(uuid)
-    // 刷新点赞列表
-    app_config.like_sentences_uuid.push(uuid)
-    item.likes = String(Number(item.likes) + 1)
-    toast.add({
-      title: '点赞成功',
-      color: 'success'
-    })
-  }
+  clearTimeout(timer.value)
+  timer.value = setTimeout(() => {
+    if (checkIdExists(uuid)) {
+      // 取消点赞
+      unlikeSentence(uuid)
+      // 刷新点赞列表
+      app_config.like_sentences_uuid = app_config.like_sentences_uuid.filter(item => item !== uuid)
+      item.likes = String(Number(item.likes) - 1)
+      toast.add({
+        title: '取消点赞',
+        color: 'info'
+      })
+    } else {
+      // 点赞句子
+      likeSentence(uuid)
+      // 刷新点赞列表
+      app_config.like_sentences_uuid.push(uuid)
+      item.likes = String(Number(item.likes) + 1)
+      toast.add({
+        title: '点赞成功',
+        color: 'success'
+      })
+    }
+  }, 300)
 }
 </script>
 
