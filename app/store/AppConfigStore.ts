@@ -8,6 +8,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         sentences_count: 5,  // 一句话数量
         sentences: [] as sentence[],  // 句子数据
         isRefreshing: false,  // 刷新中
+        isLikeMode: false,  // 喜欢模式
         like_sentences_uuid: [] as string[],  // 喜欢的句子
     }),
     actions: {

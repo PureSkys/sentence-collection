@@ -2,13 +2,13 @@ master:
   push:
     - name: Sync to Github
       stages:
-        imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
-        image: tencentcom/git-sync
-        settings:
-          target_url: https://github.com/PureSkys/sentence-collection.git
-          auth_type: https
-          username: ${GIT_USERNAME}
-          password: ${GIT_ACCESS_TOKEN}
+        - imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/PureSkys/sentence-collection.git
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
 
     - name: Build and Sync to Halo StaticServices
       docker:

@@ -11,6 +11,15 @@ export const getSentences = async (type: string, count: number) => {
         }
     )
 }
+// uuids查询句子
+export const getSentencesByUuids = async (uuids: string[]) => {
+    return await $fetch(baseUrl + '/by-uuids', {
+        method: 'POST',
+        body: {
+            uuids: uuids,
+        }
+    })
+}
 
 // 点赞句子
 export const likeSentence = async (uuid: string) => {

@@ -5,7 +5,7 @@
       <button
           v-for="(type, key) in SENTENCE_TYPES"
           :key="key"
-          :class="key === app_config.sentence_type
+          :class="key === app_config.sentence_type && !app_config.isLikeMode
                 ? 'bg-indigo-600 text-white font-medium shadow-md'
                 : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
           class="cursor-pointer px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-300"
@@ -40,6 +40,7 @@ const app_config = useAppConfigStore()  // 获取应用配置仓库
 
 // 改变类型
 const changeType = (key: string) => {
+  app_config.isLikeMode = false
   if (app_config.sentence_type === key) {
     app_config.isRefreshing = false
     return
