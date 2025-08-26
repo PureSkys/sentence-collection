@@ -30,11 +30,15 @@ import {useAppConfigStore} from "~/store/AppConfigStore";
 import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
+const timer = ref()
 
 // 改变句子数量
 const changeCount = (val: number) => {
   app_config.isRefreshing = true
   app_config.isLikeMode = false;
+  if (timer.value) {
+    clearTimeout(timer.value)
+  }
   app_config.sentences_count += val
   if (app_config.sentences_count < 1) {
     app_config.sentences_count = 1
@@ -46,13 +50,15 @@ const changeCount = (val: number) => {
     app_config.isRefreshing = false
     return
   }
-  getSentences(app_config.sentence_type, app_config.sentences_count)
-      .then(res => {
-        app_config.sentences = res as [sentence]
-        app_config.isRefreshing = false
-      }).catch(() => {
-    app_config.isRefreshing = false
-  })
+  timer.value = setTimeout(() => {
+    getSentences(app_config.sentence_type, app_config.sentences_count)
+        .then(res => {
+          app_config.sentences = res as [sentence]
+          app_config.isRefreshing = false
+        }).catch(() => {
+      app_config.isRefreshing = false
+    })
+  }, 300)
 }
 </script>
 

@@ -96,7 +96,9 @@ const checkIdExists = (uuid: string) => {
 }
 // 点赞句子或取消点赞
 const touchLike = async (item: sentence, uuid: string) => {
-  clearTimeout(timer.value)
+  if (timer.value) {
+    clearTimeout(timer.value)
+  }
   timer.value = setTimeout(() => {
     if (checkIdExists(uuid)) {
       // 取消点赞

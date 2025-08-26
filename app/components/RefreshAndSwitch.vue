@@ -57,37 +57,49 @@ import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences, getSentencesByUuids} from "~/utils/Api";
 
 const app_config = useAppConfigStore();
+const timer = ref();
 
 // 刷新句子
 const refreshSentences = () => {
   app_config.isRefreshing = true;
   app_config.isLikeMode = false;
-  getSentences(app_config.sentence_type, app_config.sentences_count)
-      .then(res => {
-        app_config.sentences = res as [];
-        app_config.isRefreshing = false;
-      })
-      .catch(() => {
-        app_config.isRefreshing = false;
-      });
-}
-
-// 我喜欢的句子
-const getLikeSentence = async (uuids: string[]) => {
-  app_config.isRefreshing = true;
-  app_config.isLikeMode = !app_config.isLikeMode;
-  if (app_config.isLikeMode === true) {
-    getSentencesByUuids(uuids)
+  if (timer.value) {
+    clearTimeout(timer.value);
+  }
+  timer.value = setTimeout(() => {
+    getSentences(app_config.sentence_type, app_config.sentences_count)
         .then(res => {
           app_config.sentences = res as [];
           app_config.isRefreshing = false;
         })
         .catch(() => {
           app_config.isRefreshing = false;
-        })
-  } else {
-    refreshSentences();
+        });
+  }, 300);
+
+}
+
+// 我喜欢的句子
+const getLikeSentence = async (uuids: string[]) => {
+  app_config.isRefreshing = true;
+  if (timer.value) {
+    clearTimeout(timer.value);
   }
+  timer.value = setTimeout(() => {
+    app_config.isLikeMode = !app_config.isLikeMode;
+    if (app_config.isLikeMode === true) {
+      getSentencesByUuids(uuids)
+          .then(res => {
+            app_config.sentences = res as [];
+            app_config.isRefreshing = false;
+          })
+          .catch(() => {
+            app_config.isRefreshing = false;
+          })
+    } else {
+      refreshSentences();
+    }
+  }, 300);
 
 }
 </script>
