@@ -1,11 +1,20 @@
 master:
   push:
-    - name: Sync to Github
+    - name: Sync GitStore
       stages:
-        - imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
+        - name: Sync to Github
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
           image: tencentcom/git-sync
           settings:
             target_url: https://github.com/PureSkys/sentence-collection.git
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
+        - name: Sync to Gitee
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/gitee.yml
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://gitee.com/pureskys/sentence-collection
             auth_type: https
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
