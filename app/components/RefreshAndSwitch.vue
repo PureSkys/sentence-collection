@@ -99,7 +99,7 @@ const getLikeSentence = async (uuids: string[]) => {
     } else {
       refreshSentences();
     }
-  }, 300);
+  }, 200);
 
 }
 </script>
