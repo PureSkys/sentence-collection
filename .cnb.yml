@@ -1,40 +1,38 @@
 master:
   push:
-    - stages:
-      - name: Sync GitStore
-        stages:
-          - jobs:
-            - name: Sync to Github
-              imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
-              image: tencentcom/git-sync
-              settings:
-                target_url: https://github.com/PureSkys/sentence-collection.git
-                auth_type: https
-                username: ${GIT_USERNAME}
-                password: ${GIT_ACCESS_TOKEN}
-            - name: Sync to Gitee
-              imports: https://cnb.cool/puresky/secret-store/-/blob/main/gitee.yml
-              image: tencentcom/git-sync
-              settings:
-                target_url: https://gitee.com/pureskys/sentence-collection
-                auth_type: https
-                username: ${GIT_USERNAME}
-                password: ${GIT_ACCESS_TOKEN}
+    - name: Sync GitStore
+      stages:
+        - name: Sync to Github
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/github.yml
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://github.com/PureSkys/sentence-collection.git
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
+        - name: Sync to Gitee
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/gitee.yml
+          image: tencentcom/git-sync
+          settings:
+            target_url: https://gitee.com/pureskys/sentence-collection
+            auth_type: https
+            username: ${GIT_USERNAME}
+            password: ${GIT_ACCESS_TOKEN}
 
-      - name: Build and Sync to Halo StaticServices
-        docker:
-          image: node:22
-        stages:
-          - name: Install pnpm
-            script:
-              - npm install -g pnpm
-          - name: Install dependencies
-            script:
-              - pnpm install
-          - name: Build
-            script:
-              - pnpm run generate
-          - name: Deploy to Halo
-            imports: https://cnb.cool/puresky/secret-store/-/blob/main/puresky.yml
-            script:
-              - npx halo-static-pages-deploy-cli deploy -e $ENDPOINT -i $SENTENCE_COLLECTION_ID -t $PAT -f ./.output/public
+    - name: Build and Sync to Halo StaticServices
+      docker:
+        image: node:22
+      stages:
+        - name: Install pnpm
+          script:
+            - npm install -g pnpm
+        - name: Install dependencies
+          script:
+            - pnpm install
+        - name: Build
+          script:
+            - pnpm run generate
+        - name: Deploy to Halo
+          imports: https://cnb.cool/puresky/secret-store/-/blob/main/puresky.yml
+          script:
+            - npx halo-static-pages-deploy-cli deploy -e $ENDPOINT -i $SENTENCE_COLLECTION_ID -t $PAT -f ./.output/public
