@@ -11,16 +11,16 @@
   },
   "dependencies": {
     "@nuxt/eslint": "1.9.0",
-    "@nuxt/ui": "^3.3.5",
+    "@nuxt/ui": "^3.3.7",
     "@pinia/nuxt": "0.11.2",
-    "@tailwindcss/vite": "^4.1.14",
-    "eslint": "^9.36.0",
-    "nuxt": "^4.1.2",
-    "pinia": "^3.0.3",
-    "pinia-plugin-persistedstate": "^4.5.0",
-    "tailwindcss": "^4.1.14",
-    "vue": "^3.5.22",
-    "vue-router": "^4.5.1"
+    "@tailwindcss/vite": "^4.2.0",
+    "eslint": "^9.39.3",
+    "nuxt": "^4.3.1",
+    "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "tailwindcss": "^4.2.0",
+    "vue": "^3.5.28",
+    "vue-router": "^4.6.4"
   },
   "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
 }
