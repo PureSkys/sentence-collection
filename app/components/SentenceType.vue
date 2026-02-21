@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences, getCategories} from "~/utils/Api";
+import type {CategoryResponse, sentence} from "~/type";
 
 const app_config = useAppConfigStore()
 
@@ -26,7 +27,7 @@ const app_config = useAppConfigStore()
 onMounted(async () => {
   try {
     const categories = await getCategories()
-    app_config.categories = categories as any
+    app_config.categories = categories as CategoryResponse[]
     if (app_config.categories.length > 0 && !app_config.current_category_id) {
       app_config.current_category_id = app_config.categories[0].id
     }
@@ -46,7 +47,7 @@ const changeCategory = (categoryId: string) => {
   app_config.current_category_id = categoryId;
   getSentences(app_config.current_category_id, app_config.sentences_count)
       .then(res => {
-        app_config.sentences = res as []
+        app_config.sentences = res as sentence[]
         app_config.isRefreshing = false
       }).catch(() => {
     app_config.isRefreshing = false

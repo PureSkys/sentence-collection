@@ -73,7 +73,7 @@ import {likeSentence, unlikeSentence} from "~/utils/Api";
 import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore()  // 获取应用配置仓库
-const timer = ref()  // 定时器id
+const timer = ref<ReturnType<typeof setTimeout> | null>(null)  // 定时器id
 const toast = useToast()
 
 // 根据category_id获取分类名称

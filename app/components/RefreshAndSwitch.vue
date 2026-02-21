@@ -55,9 +55,10 @@
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences, getSentencesByIds} from "~/utils/Api";
+import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore();
-const timer = ref();
+const timer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 // 刷新句子
 const refreshSentences = () => {
@@ -70,7 +71,7 @@ const refreshSentences = () => {
     if (app_config.current_category_id) {
       getSentences(app_config.current_category_id, app_config.sentences_count)
           .then(res => {
-            app_config.sentences = res as [];
+            app_config.sentences = res as sentence[];
             app_config.isRefreshing = false;
           })
           .catch(() => {
@@ -94,7 +95,7 @@ const getLikeSentence = async (uuids: string[]) => {
       if (uuids.length > 0) {
         getSentencesByIds(uuids)
             .then(res => {
-              app_config.sentences = res as [];
+              app_config.sentences = res as sentence[];
               app_config.isRefreshing = false;
             })
             .catch(() => {

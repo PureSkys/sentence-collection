@@ -58,7 +58,7 @@
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences, getCategories} from "~/utils/Api";
-import type {sentence} from "~/type";
+import type {sentence, CategoryResponse} from "~/type";
 
 const app_config = useAppConfigStore();
 
@@ -66,7 +66,7 @@ onMounted(async () => {
   // 加载分类
   try {
     const categories = await getCategories()
-    app_config.categories = categories as any
+    app_config.categories = categories as CategoryResponse[]
     if (app_config.categories.length > 0) {
       app_config.current_category_id = app_config.categories[0].id
     }

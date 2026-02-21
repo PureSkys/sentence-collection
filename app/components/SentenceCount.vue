@@ -28,10 +28,10 @@
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
 import {getSentences} from "~/utils/Api";
-import type {sentence} from "~/type";
+import type { sentence } from "~/type";
 
 const app_config = useAppConfigStore()
-const timer = ref()
+const timer = ref<ReturnType<typeof setTimeout> | null>(null)
 
 // 改变句子数量
 const changeCount = (val: number) => {
