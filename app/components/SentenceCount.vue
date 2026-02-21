@@ -22,14 +22,15 @@
       ><span class="text-2xl font-medium text-gray-600 dark:text-gray-400">+</span>
       </button>
     </div>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">最多 15 条</p></div>
+    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-center">最多 20 条</p></div>
 </template>
 
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
+import {getSentences} from "~/utils/Api";
 import type {sentence} from "~/type";
 
-const app_config = useAppConfigStore()  // 获取应用配置仓库
+const app_config = useAppConfigStore()
 const timer = ref()
 
 // 改变句子数量
@@ -40,24 +41,31 @@ const changeCount = (val: number) => {
     clearTimeout(timer.value)
   }
   app_config.sentences_count += val
+  
+  // API文档中limit的最大值是20
   if (app_config.sentences_count < 1) {
     app_config.sentences_count = 1
     app_config.isRefreshing = false
     return;
   }
-  if (app_config.sentences_count > 15) {
-    app_config.sentences_count = 15
+  if (app_config.sentences_count > 20) {
+    app_config.sentences_count = 20
     app_config.isRefreshing = false
     return
   }
+  
   timer.value = setTimeout(() => {
-    getSentences(app_config.sentence_type, app_config.sentences_count)
-        .then(res => {
-          app_config.sentences = res as [sentence]
-          app_config.isRefreshing = false
-        }).catch(() => {
+    if (app_config.current_category_id) {
+      getSentences(app_config.current_category_id, app_config.sentences_count)
+          .then(res => {
+            app_config.sentences = res as sentence[]
+            app_config.isRefreshing = false
+          }).catch(() => {
+        app_config.isRefreshing = false
+      })
+    } else {
       app_config.isRefreshing = false
-    })
+    }
   }, 300)
 }
 </script>

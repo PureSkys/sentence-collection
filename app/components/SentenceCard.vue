@@ -1,5 +1,5 @@
 <template>
-  <div v-for="item in app_config.sentences" :key="item.uuid"
+  <div v-for="item in app_config.sentences" :key="item.id"
        class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1">
     <!--    骨架屏-->
     <div v-if="app_config.isRefreshing" class="p-9 flex items-center gap-4">
@@ -16,15 +16,15 @@
         <!--        分类-->
         <span
             class="inline-block px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900/50 text-indigo-800 dark:text-indigo-300 rounded-full">
-          {{ item.category }}
+          {{ getCategoryName(item.category_id) }}
         </span>
         <div class="flex">
           <!--          点赞按钮-->
           <button
-              :title="item.likes?item.likes:'0'"
-              @click="touchLike(item,item.uuid)"
+              :title="item.likes"
+              @click="touchLike(item, item.id)"
               class="flex items-center gap-1 cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70">
-            <svg t="1755952044704" v-if="!checkIdExists(item.uuid)" class="icon" viewBox="0 0 1166 1024" version="1.1"
+            <svg t="1755952044704" v-if="!checkIdExists(item.id)" class="icon" viewBox="0 0 1166 1024" version="1.1"
                  xmlns="http://www.w3.org/2000/svg" p-id="10160" width="18" height="18">
               <path
                   d="M882.058985 2.769416C863.503898 0.969296 845.641165 0 829.024669 0c-115.623117 0-184.166162 42.510535-246.201079 107.868752C512.341954 33.094521 431.751949-11.631547 283.588195 2.769416 158.964476 14.954846 17.170379 124.623718 0 336.345569v69.235399C13.84708 589.470188 142.486451 739.434063 507.495476 999.897634a129.331726 129.331726 0 0 0 150.379287 0c365.285966-261.017455 493.371454-410.981329 507.633946-594.870549v-69.235399C1148.476801 124.623718 1006.682703 14.954846 882.058985 2.769416z m189.843464 339.253456v57.465381C1059.301607 550.006011 941.601428 682.245623 603.59421 923.046341a35.725466 35.725466 0 0 1-41.54124 0C224.738106 682.384094 106.345573 550.006011 93.74473 399.488253V342.022872c13.84708-156.887414 112.438288-237.477419 198.982538-245.924138 15.370259-1.523179 30.186634-2.215533 43.895243-2.215533 96.929559 0 143.455747 35.448524 210.337142 115.069234l35.863937 42.787476 36.002408-42.787476c66.742925-79.620709 112.992171-115.069233 210.198671-115.069234 13.84708 0 28.524984 0 43.895243 2.215533 86.544249 8.446719 185.55087 89.036723 198.982537 245.924138z"
@@ -37,12 +37,12 @@
                   fill="#d81e06" p-id="11762"></path>
             </svg>
             <span class="text-gray-500"
-                  :class="checkIdExists(item.uuid)?'text-red-600':''">{{ item.likes ? item.likes : 0 }}</span>
+                  :class="checkIdExists(item.id)?'text-red-600':''">{{ item.likes }}</span>
           </button>
           <!--        分享按钮-->
           <button
               class="cursor-pointer p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-70"
-              @click="copy(item.sentence)"
+              @click="copy(item.content)"
           >
             <svg class="icon" height="18" p-id="13692" t="1755868018039"
                  version="1.1" viewBox="0 0 1024 1024" width="18" xmlns="http://www.w3.org/2000/svg">
@@ -55,9 +55,12 @@
       </div>
       <!--      句子内容-->
       <blockquote class="flex flex-col   text-gray-800 dark:text-gray-200 mb-4 italic">
-        <span>{{ item.sentence }}</span>
-        <div class="flex mt-3 justify-end">
-          <span class="truncate">—— {{ item.from_who }} 《{{ item.from_source }}》</span>
+        <span>{{ item.content }}</span>
+        <div v-if="item.from_who || item.from_source" class="flex mt-3 justify-end">
+          <span class="truncate">
+            <template v-if="item.from_who">—— {{ item.from_who }}</template>
+            <template v-if="item.from_source">《{{ item.from_source }}》</template>
+          </span>
         </div>
       </blockquote>
     </div>
@@ -72,6 +75,12 @@ import type {sentence} from "~/type";
 const app_config = useAppConfigStore()  // 获取应用配置仓库
 const timer = ref()  // 定时器id
 const toast = useToast()
+
+// 根据category_id获取分类名称
+const getCategoryName = (categoryId: string) => {
+  const category = app_config.categories.find(c => c.id === categoryId)
+  return category ? category.category : '未知'
+}
 
 // 复制文本
 const copy = (text: string) => {
@@ -91,31 +100,31 @@ const copy = (text: string) => {
   }
 }
 // 检测句子是否点赞
-const checkIdExists = (uuid: string) => {
-  return app_config.like_sentences_uuid.some(item => item === uuid)
+const checkIdExists = (id: string) => {
+  return app_config.like_sentences_uuid.some(item => item === id)
 }
 // 点赞句子或取消点赞
-const touchLike = async (item: sentence, uuid: string) => {
+const touchLike = async (item: sentence, id: string) => {
   if (timer.value) {
     clearTimeout(timer.value)
   }
   timer.value = setTimeout(() => {
-    if (checkIdExists(uuid)) {
+    if (checkIdExists(id)) {
       // 取消点赞
-      unlikeSentence(uuid)
+      unlikeSentence(id)
       // 刷新点赞列表
-      app_config.like_sentences_uuid = app_config.like_sentences_uuid.filter(item => item !== uuid)
-      item.likes = String(Number(item.likes) - 1)
+      app_config.like_sentences_uuid = app_config.like_sentences_uuid.filter(item => item !== id)
+      item.likes = item.likes - 1
       toast.add({
         title: '取消点赞',
         color: 'info'
       })
     } else {
       // 点赞句子
-      likeSentence(uuid)
+      likeSentence(id)
       // 刷新点赞列表
-      app_config.like_sentences_uuid.push(uuid)
-      item.likes = String(Number(item.likes) + 1)
+      app_config.like_sentences_uuid.push(id)
+      item.likes = item.likes + 1
       toast.add({
         title: '点赞成功',
         color: 'success'

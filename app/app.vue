@@ -11,7 +11,8 @@
         <div class="mb-8 text-center">
           <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">发现精彩句子</h2>
           <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            从文学、诗词、哲学、影视等多种类型中发现精彩句子，保存你喜欢的内容，分享你的感悟。</p>
+            从文学、诗词、哲学、影视等多种类型中发现精彩句子，保存你喜欢的内容，分享你的感悟。
+          </p>
         </div>
         <!--      中间部分卡片-->
         <div
@@ -56,16 +57,31 @@
 </template>
 <script lang="ts" setup>
 import {useAppConfigStore} from "~/store/AppConfigStore";
-import {getSentences} from "~/utils/Api";
+import {getSentences, getCategories} from "~/utils/Api";
 import type {sentence} from "~/type";
 
 const app_config = useAppConfigStore();
-onMounted(() => {
-  if (app_config.sentences.length <= 0) {
-    getSentences(app_config.sentence_type, app_config.sentences_count)
-        .then(res => {
-          app_config.sentences = res as [sentence]
-        });
+
+onMounted(async () => {
+  // 加载分类
+  try {
+    const categories = await getCategories()
+    app_config.categories = categories as any
+    if (app_config.categories.length > 0) {
+      app_config.current_category_id = app_config.categories[0].id
+    }
+  } catch (error) {
+    console.error('获取分类失败:', error)
+  }
+
+  // 加载句子
+  if (app_config.sentences.length <= 0 && app_config.current_category_id) {
+    try {
+      const res = await getSentences(app_config.current_category_id, app_config.sentences_count)
+      app_config.sentences = res as sentence[]
+    } catch (error) {
+      console.error('获取句子失败:', error)
+    }
   }
   app_config.isRefreshing = false;
 })

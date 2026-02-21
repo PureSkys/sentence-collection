@@ -1,10 +1,11 @@
 import {defineStore} from 'pinia'
-import type {sentence} from "~/type";
+import type {sentence, CategoryResponse} from "~/type";
 
 export const useAppConfigStore = defineStore('appConfigStore', {
     state: () => ({
         dark_mode: true,  // 夜间模式
-        sentence_type: 'all',  // 一句话类型
+        categories: [] as CategoryResponse[],  // 分类列表
+        current_category_id: '' as string,  // 当前选中分类ID
         sentences_count: 5,  // 一句话数量
         sentences: [] as sentence[],  // 句子数据
         isRefreshing: false,  // 刷新中
