@@ -59,6 +59,24 @@
       <footer>
         <AppFooter></AppFooter>
       </footer>
+
+      <!-- 浮动刷新按钮 -->
+      <button
+        @click="refreshSentences"
+        :disabled="app_config.isRefreshing"
+        class="fixed bottom-6 right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-xl shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-110 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center disabled:opacity-70 disabled:hover:scale-100 disabled:hover:translate-y-0 group"
+      >
+        <svg
+          :class="app_config.isRefreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'"
+          class="w-6 h-6 sm:w-7 sm:h-7 text-white"
+          viewBox="0 0 1024 1024"
+        >
+          <path
+            d="M896 198.4 896 198.4l0 179.2 0 0c0 19.2-6.4 32-19.2 44.8-12.8 12.8-32 19.2-44.8 19.2l0 0-179.2 0 0 0c-19.2 0-32-6.4-44.8-19.2-25.6-25.6-25.6-64 0-89.6C620.8 320 633.6 313.6 652.8 313.6l0 0 25.6 0C627.2 275.2 576 256 518.4 256 441.6 256 377.6 281.6 332.8 332.8l0 0c-25.6 25.6-64 25.6-89.6 0-25.6-25.6-25.6-64 0-89.6l0 0C313.6 172.8 409.6 128 518.4 128c96 0 185.6 38.4 249.6 96L768 198.4l0 0c0-19.2 6.4-32 19.2-44.8 25.6-25.6 64-25.6 89.6 0C889.6 160 896 179.2 896 198.4zM416 691.2c-12.8 12.8-32 19.2-44.8 19.2l0 0L352 710.4C396.8 748.8 448 768 505.6 768c70.4 0 134.4-25.6 179.2-76.8l0 0c25.6-25.6 64-25.6 89.6 0 25.6 25.6 25.6 64 0 89.6l0 0C710.4 851.2 614.4 896 505.6 896c-96 0-185.6-38.4-249.6-96l0 32 0 0c0 19.2-6.4 32-19.2 44.8-25.6-25.6-64-25.6-89.6 0C134.4 864 128 844.8 128 825.6l0 0 0-179.2 0 0c0-19.2 6.4-32 19.2-44.8C160 588.8 172.8 582.4 192 582.4l0 0 179.2 0 0 0c19.2 0 32 6.4 44.8 19.2C441.6 627.2 441.6 665.6 416 691.2z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
     </div>
   </UApp>
 </template>
@@ -68,6 +86,29 @@ import {getSentences, getCategories} from "~/utils/Api";
 import type {sentence, CategoryResponse} from "~/type";
 
 const app_config = useAppConfigStore();
+const timer = ref<ReturnType<typeof setTimeout> | null>(null);
+
+const refreshSentences = () => {
+  app_config.isRefreshing = true;
+  app_config.isLikeMode = false;
+  if (timer.value) {
+    clearTimeout(timer.value);
+  }
+  timer.value = setTimeout(() => {
+    if (app_config.current_category_id) {
+      getSentences(app_config.current_category_id, app_config.sentences_count)
+        .then((res) => {
+          app_config.sentences = res as sentence[];
+          app_config.isRefreshing = false;
+        })
+        .catch(() => {
+          app_config.isRefreshing = false;
+        });
+    } else {
+      app_config.isRefreshing = false;
+    }
+  }, 300);
+};
 
 onMounted(async () => {
   // 加载分类
