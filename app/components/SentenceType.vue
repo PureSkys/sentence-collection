@@ -1,16 +1,22 @@
 <template>
   <div class="w-full mb-4">
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">内容类型</label>
-    <div class="flex md:flex items-center space-x-2 overflow-x-auto pb-2">
+    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+      <svg class="w-4 h-4 text-indigo-500" viewBox="0 0 1024 1024">
+        <path d="M128 128h768v128H128V128zm0 256h768v128H128V384zm0 256h768v128H128V640z" fill="currentColor"/>
+      </svg>
+      内容类型
+    </label>
+    <div class="flex items-center gap-2.5 overflow-x-auto pb-1 -mx-1 px-1">
       <button
           v-for="category in app_config.categories"
           :key="category.id"
           :class="category.id === app_config.current_category_id && !app_config.isLikeMode
-                ? 'bg-indigo-600 text-white font-medium shadow-md'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-          class="cursor-pointer px-3 py-1.5 rounded-full text-sm whitespace-nowrap transition-all duration-300"
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 scale-105'
+                : 'bg-gray-50 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105'"
+          class="cursor-pointer px-4 py-2.5 rounded-2xl text-sm whitespace-nowrap transition-all duration-300 relative group"
           @click="changeCategory(category.id)">
-        {{ category.category }}
+        <span class="relative z-10">{{ category.category }}</span>
+        <div v-if="category.id === app_config.current_category_id && !app_config.isLikeMode" class="absolute inset-0 rounded-2xl bg-white/10 animate-pulse"></div>
       </button>
     </div>
   </div>
