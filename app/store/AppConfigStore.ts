@@ -6,7 +6,7 @@ export const useAppConfigStore = defineStore('appConfigStore', {
         dark_mode: true,  // 夜间模式
         categories: [] as CategoryResponse[],  // 分类列表
         current_category_id: '' as string,  // 当前选中分类ID
-        sentences_count: 5,  // 一句话数量
+        sentences_count: 8,  // 一句话数量
         sentences: [] as sentence[],  // 句子数据
         isRefreshing: false,  // 刷新中
         isLikeMode: false,  // 喜欢模式
