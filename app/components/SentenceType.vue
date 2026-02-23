@@ -8,6 +8,15 @@
     </label>
     <div class="flex items-center gap-2.5 overflow-x-auto pb-1 -mx-1 px-1">
       <button
+          :class="app_config.current_category_id === 'all' && !app_config.isLikeMode
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 scale-105'
+                : 'bg-gray-50 text-gray-700 dark:bg-gray-700/50 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105'"
+          class="cursor-pointer px-4 py-2.5 rounded-2xl text-sm whitespace-nowrap transition-all duration-300 relative group"
+          @click="changeCategory('all')">
+        <span class="relative z-10">全部</span>
+        <div v-if="app_config.current_category_id === 'all' && !app_config.isLikeMode" class="absolute inset-0 rounded-2xl bg-white/10 animate-pulse"></div>
+      </button>
+      <button
           v-for="category in app_config.categories"
           :key="category.id"
           :class="category.id === app_config.current_category_id && !app_config.isLikeMode
@@ -34,9 +43,6 @@ onMounted(async () => {
   try {
     const categories = await getCategories()
     app_config.categories = categories as CategoryResponse[]
-    if (app_config.categories.length > 0 && !app_config.current_category_id) {
-      app_config.current_category_id = app_config.categories[0].id
-    }
   } catch (error) {
     console.error('获取分类失败:', error)
   }

@@ -74,9 +74,6 @@ onMounted(async () => {
   try {
     const categories = await getCategories()
     app_config.categories = categories as CategoryResponse[]
-    if (app_config.categories.length > 0) {
-      app_config.current_category_id = app_config.categories[0].id
-    }
   } catch (error) {
     console.error('获取分类失败:', error)
   }
